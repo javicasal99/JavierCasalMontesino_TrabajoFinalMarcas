@@ -118,6 +118,7 @@ let reseñas = [
   { id: 8, libro_id: 4, usuario: "Gokussj1", comentario: "Un genio adelantado a su tiempo. Cervantes es insuperable.", puntuacion: 9, fecha: "2024-04-01" }
 ];
 
+//Endpoint Libros
 
 // GET todos los libros
 app.get("/libros", (req, res) => {
@@ -255,6 +256,72 @@ app.delete("/libros/:id", (req, res) => {
 
   }
 
+});
+
+//Endpoint Reseñas
+
+// GET todas las reseñas
+app.get("/reseñas", (req, res) => {
+  res.json(reseñas);
+});
+
+// GET reseñas de un libro concreto
+app.get("/libros/:id/reseñas", (req, res) => {
+  const id = parseInt(req.params.id);
+  const libro = libros.find(l => l.id == id);
+  if (!libro) {
+    return res.status(404).json({ mensaje: "Libro no encontrado" });
+  }
+  const reseñasLibro = reseñas.filter(r => r.libro_id == id);
+  res.json(reseñasLibro);
+});
+
+// POST crear reseña
+app.post("/reseñas", (req, res) => {
+
+const libro_id = req.body.libro_id;
+const usuario = req.body.usuario;
+const comentario = req.body.comentario;
+const puntuacion = req.body.puntuacion;
+const fecha = req.body.fecha;
+
+  if (!libro_id || !usuario || !comentario || puntuacion === undefined || !fecha) {
+    return res.status(400).json({
+      mensaje: "Faltan campos obligatorios",
+      campos_obligatorios: ["libro_id", "usuario", "comentario", "puntuacion", "fecha"]
+    });
+  }
+
+  const libro = libros.find(l => l.id == libro_id);
+  if (!libro) {
+    return res.status(404).json({ mensaje: "El libro indicado no existe" });
+  }
+
+  const nuevaReseña = {
+    id: nextReseñaId++,
+    libro_id,
+    usuario,
+    comentario,
+    puntuacion,
+    fecha
+  };
+
+  reseñas.push(nuevaReseña);
+  res.status(201).json({
+    mensaje: "Reseña añadida",
+    reseña: nuevaReseña
+  });
+});
+
+// DELETE eliminar reseña
+app.delete("/reseñas/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const indice = reseñas.findIndex(r => r.id == id);
+  if (indice == -1) {
+    return res.status(404).json({ mensaje: "Reseña no encontrada" });
+  }
+  reseñas.splice(indice, 1);
+  res.json({ mensaje: "Reseña eliminada" });
 });
 
 // Arranque del servidor
