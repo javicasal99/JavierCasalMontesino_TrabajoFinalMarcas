@@ -118,6 +118,145 @@ let reseñas = [
   { id: 8, libro_id: 4, usuario: "Gokussj1", comentario: "Un genio adelantado a su tiempo. Cervantes es insuperable.", puntuacion: 9, fecha: "2024-04-01" }
 ];
 
+
+// GET todos los libros
+app.get("/libros", (req, res) => {
+  res.json(libros);
+});
+
+
+// GET libro por id
+app.get("/libros/:id", (req, res) => {
+
+  const id = parseInt(req.params.id);
+
+  const libro = libros.find(libro => libro.id == id);
+
+  if (!libro) {
+    res.status(404).json({
+      mensaje: "Libro no encontrado"
+    });
+
+  } else {
+    res.json(libro);
+  }
+});
+
+
+// GET buscar libro por titulo
+app.get("/buscar-libro", (req, res) => {
+
+  const titulo = req.query.titulo;
+
+  const libro = libros.find(libro =>
+    libro.titulo.toLowerCase() == titulo.toLowerCase()
+  );
+
+  if (!libro) {
+
+    res.status(404).json({
+      mensaje: "Libro no encontrado"
+    });
+
+  } else {
+
+    res.json(libro);
+
+  }
+});
+
+
+// POST crear libro
+app.post("/libros", (req, res) => {
+  const { titulo, autor, genero, anio, paginas, disponible, valoracion, editorial, sinopsis } = req.body;
+
+  if (!titulo || !autor || !genero || !anio || !paginas || !editorial || !sinopsis) {
+    return res.status(400).json({
+      mensaje: "Faltan campos obligatorios",
+      campos_obligatorios: ["titulo", "autor", "genero", "anio", "paginas", "editorial", "sinopsis"]
+    });
+  }
+
+  const nuevoLibro = {
+    id: nextLibroId++,
+    titulo,
+    autor,
+    genero,
+    anio,
+    paginas,
+    disponible,
+    valoracion,
+    editorial,
+    sinopsis
+  };
+
+  libros.push(nuevoLibro);
+  res.status(201).json({
+    mensaje: "Libro añadido",
+    libro: nuevoLibro
+  });
+});
+
+
+// PUT modificar libro
+app.put("/libros/:id", (req, res) => {
+
+  const id = parseInt(req.params.id);
+
+  const libro = libros.find(libro => libro.id == id);
+
+  if (!libro) {
+
+    res.status(404).json({
+      mensaje: "Libro no encontrado"
+    });
+
+  } else {
+
+    libro.titulo = req.body.titulo;
+    libro.autor = req.body.autor;
+    libro.genero = req.body.genero;
+    libro.anio = req.body.anio;
+    libro.paginas = req.body.paginas;
+    libro.disponible = req.body.disponible;
+    libro.valoracion = req.body.valoracion;
+    libro.editorial = req.body.editorial;
+    libro.sinopsis = req.body.sinopsis;
+
+    res.json({
+      mensaje: "Libro actualizado",
+      libro: libro
+    });
+
+  }
+});
+
+
+// DELETE eliminar libro
+app.delete("/libros/:id", (req, res) => {
+
+  const id = parseInt(req.params.id);
+
+  const indice = libros.findIndex(libro => libro.id == id);
+
+  if (indice == -1) {
+
+    res.status(404).json({
+      mensaje: "Libro no encontrado"
+    });
+
+  } else {
+
+    libros.splice(indice, 1);
+
+    res.json({
+      mensaje: "Libro eliminado"
+    });
+
+  }
+
+});
+
 // Arranque del servidor
 app.listen(PORT, () => {
   console.log(`Servidor de la Biblioteca arrancado correctamente`);
