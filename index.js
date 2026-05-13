@@ -105,6 +105,19 @@ let libros = [
   }
 ];
 
+//Array reseñas
+
+let reseñas = [
+  { id: 1, libro_id: 1, usuario: "ManuAparicio06", comentario: "Una obra maestra de la literatura latinoamericana, imprescindible.", puntuacion: 10, fecha: "2024-01-15" },
+  { id: 2, libro_id: 1, usuario: "XxFreiraxX", comentario: "Compleja pero increíblemente hermosa. La recomiendo mucho.", puntuacion: 9, fecha: "2024-02-20" },
+  { id: 3, libro_id: 2, usuario: "Almazo97", comentario: "Escalofriante y muy actual. Orwell era un visionario.", puntuacion: 10, fecha: "2024-01-10" },
+  { id: 4, libro_id: 2, usuario: "LaCabra69", comentario: "Algo lento al principio pero el final te deja sin palabras.", puntuacion: 8, fecha: "2024-03-05" },
+  { id: 5, libro_id: 3, usuario: "Messilover", comentario: "El mejor libro de fantasía jamás escrito. Sin discusión.", puntuacion: 10, fecha: "2024-01-22" },
+  { id: 6, libro_id: 5, usuario: "Hachahtml", comentario: "Mi libro favorito desde niño. Siempre lo releo con alegría.", puntuacion: 9, fecha: "2024-02-14" },
+  { id: 7, libro_id: 7, usuario: "Bicholover", comentario: "Dune es la biblia de la ciencia ficción. Absolutamente épico.", puntuacion: 10, fecha: "2024-03-18" },
+  { id: 8, libro_id: 4, usuario: "Gokussj1", comentario: "Un genio adelantado a su tiempo. Cervantes es insuperable.", puntuacion: 9, fecha: "2024-04-01" }
+];
+
 // Arranque del servidor
 app.listen(PORT, () => {
   console.log(`Servidor de la Biblioteca arrancado correctamente`);
