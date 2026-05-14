@@ -261,23 +261,23 @@ app.delete("/libros/:id", (req, res) => {
 //Endpoint Reseñas
 
 // GET todas las reseñas
-app.get("/reseñas", (req, res) => {
-  res.json(reseñas);
+app.get("/resenas", (req, res) => {
+  res.json(resenas);
 });
 
 // GET reseñas de un libro concreto
-app.get("/libros/:id/reseñas", (req, res) => {
+app.get("/libros/:id/resenas", (req, res) => {
   const id = parseInt(req.params.id);
   const libro = libros.find(l => l.id == id);
   if (!libro) {
     return res.status(404).json({ mensaje: "Libro no encontrado" });
   }
-  const reseñasLibro = reseñas.filter(r => r.libro_id == id);
-  res.json(reseñasLibro);
+  const resenasLibro = resenas.filter(r => r.libro_id == id);
+  res.json(resenasLibro);
 });
 
 // POST crear reseña
-app.post("/reseñas", (req, res) => {
+app.post("/resenas", (req, res) => {
 
 const libro_id = req.body.libro_id;
 const usuario = req.body.usuario;
@@ -297,8 +297,8 @@ const fecha = req.body.fecha;
     return res.status(404).json({ mensaje: "El libro indicado no existe" });
   }
 
-  const nuevaReseña = {
-    id: nextReseñaId++,
+  const nuevaResena = {
+    id: nextResenaId++,
     libro_id,
     usuario,
     comentario,
@@ -306,17 +306,17 @@ const fecha = req.body.fecha;
     fecha
   };
 
-  reseñas.push(nuevaReseña);
+  reseñas.push(nuevaResena);
   res.status(201).json({
     mensaje: "Reseña añadida",
-    reseña: nuevaReseña
+    resena: nuevaResena
   });
 });
 
 // DELETE eliminar reseña
-app.delete("/reseñas/:id", (req, res) => {
+app.delete("/resenas/:id", (req, res) => {
   const id = parseInt(req.params.id);
-  const indice = reseñas.findIndex(r => r.id == id);
+  const indice = resenas.findIndex(r => r.id == id);
   if (indice == -1) {
     return res.status(404).json({ mensaje: "Reseña no encontrada" });
   }
