@@ -205,12 +205,12 @@ app.get("/libros/buscar", (req, res) => {
   }
   if (req.query.autor) {
     resultado = resultado.filter((libro) =>
-      libro.autor.includes(req.query.autor),
+      libro.autor.toLowerCase().includes(req.query.autor.toLowerCase()),
     );
   }
   if (req.query.genero) {
     resultado = resultado.filter((libro) =>
-      libro.genero.includes(req.query.genero),
+      libro.genero.toLowerCase().includes(req.query.genero.toLowerCase()),
     );
   }
   if (req.query.disponible) {

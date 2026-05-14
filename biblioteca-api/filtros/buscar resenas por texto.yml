@@ -1,0 +1,19 @@
+info:
+  name: buscar resenas por texto
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: http://localhost:3000/resenas/buscar?texto=maestra
+  params:
+    - name: texto
+      value: maestra
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

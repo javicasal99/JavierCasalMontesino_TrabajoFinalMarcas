@@ -1,0 +1,25 @@
+info:
+  name: crear resena
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:3000/resenas
+  body:
+    type: json
+    data: |-
+      {
+        "libro_id": 2,
+        "usuario": "nuevolector",
+        "comentario": "Un libro que te hace reflexionar profundamente.",
+        "puntuacion": 9,
+        "fecha": "2024-05-10"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
