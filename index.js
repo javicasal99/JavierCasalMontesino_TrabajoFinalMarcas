@@ -323,7 +323,90 @@ app.delete("/reseñas/:id", (req, res) => {
   reseñas.splice(indice, 1);
   res.json({ mensaje: "Reseña eliminada" });
 });
+app.get("/libros/buscar", (req, res) => {
 
+  let resultado = libros;
+
+  // Filtrar por título
+  if (req.query.titulo) {
+    resultado = resultado.filter(libro =>
+      libro.titulo.includes(req.query.titulo)
+    );
+  }
+
+  // Filtrar por autor
+  if (req.query.autor) {
+    resultado = resultado.filter(libro =>
+      libro.autor.includes(req.query.autor)
+    );
+  }
+
+  // Filtrar por género
+  if (req.query.genero) {
+    resultado = resultado.filter(libro =>
+      libro.genero.includes(req.query.genero)
+    );
+  }
+
+  // Filtrar por disponibilidad
+  if (req.query.disponible) {
+
+    if (req.query.disponible == "true") {
+      resultado = resultado.filter(libro =>
+        libro.disponible == true
+      );
+    }
+
+    if (req.query.disponible == "false") {
+      resultado = resultado.filter(libro =>
+        libro.disponible == false
+      );
+    }
+
+  }
+
+  // Ordenar resultados
+  if (req.query.ordenar_por) {
+
+    const campo = req.query.ordenar_por;
+
+    resultado.sort((a, b) => {
+
+      // Descendente
+      if (req.query.orden == "desc") {
+
+        if (a[campo] > b[campo]) {
+          return -1;
+        }
+
+        if (a[campo] < b[campo]) {
+          return 1;
+        }
+
+      }
+
+      // Ascendente
+      else {
+
+        if (a[campo] > b[campo]) {
+          return 1;
+        }
+
+        if (a[campo] < b[campo]) {
+          return -1;
+        }
+
+      }
+
+      return 0;
+
+    });
+
+  }
+
+  res.json(resultado);
+
+});
 // Arranque del servidor
 app.listen(PORT, () => {
   console.log(`Servidor de la Biblioteca arrancado correctamente`);
