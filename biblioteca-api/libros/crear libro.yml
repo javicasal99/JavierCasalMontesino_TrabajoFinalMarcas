@@ -1,0 +1,29 @@
+info:
+  name: crear libro
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://localhost:3000/libros
+  body:
+    type: json
+    data: |-
+      {
+        "titulo": "El principito",
+        "autor": "Antoine de Saint-Exupéry",
+        "genero": "Fábula",
+        "anio": 1943,
+        "paginas": 96,
+        "disponible": true,
+        "valoracion": 9.0,
+        "editorial": "Reynal & Hitchcock",
+        "sinopsis": "Un aviador conoce a un pequeño príncipe de otro planeta."
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

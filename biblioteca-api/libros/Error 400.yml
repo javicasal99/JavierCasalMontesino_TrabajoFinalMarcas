@@ -1,0 +1,22 @@
+info:
+  name: Error 400
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: http://localhost:3000/libros
+  body:
+    type: json
+    data: |-
+      {
+        //falta el resto de campos
+        "titulo": "Solo el titulo"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
