@@ -407,6 +407,87 @@ app.get("/libros/buscar", (req, res) => {
   res.json(resultado);
 
 });
+
+// Estadísticas generales
+app.get("/estadisticas/libros", (req, res) => {
+
+  let suma = 0;
+
+  libros.forEach(libro => {
+    suma = suma + libro.valoracion;
+  });
+
+  let media = suma / libros.length;
+
+  let disponibles = libros.filter(libro =>
+    libro.disponible == true
+  ).length;
+
+  let noDisponibles = libros.filter(libro =>
+    libro.disponible == false
+  ).length;
+
+  res.json({
+    total_libros: libros.length,
+    total_reseñas: reseñas.length,
+    disponibles: disponibles,
+    no_disponibles: noDisponibles,
+    valoracion_media: media
+  });
+
+});
+
+
+// Top libros
+app.get("/estadisticas/top", (req, res) => {
+
+  let n = 3;
+
+  if (req.query.n) {
+    n = parseInt(req.query.n);
+  }
+
+  let resultado = [...libros];
+
+  resultado.sort((a, b) => {
+
+    if (a.valoracion > b.valoracion) {
+      return -1;
+    }
+
+    if (a.valoracion < b.valoracion) {
+      return 1;
+    }
+
+    return 0;
+
+  });
+
+  resultado = resultado.slice(0, n);
+
+  res.json(resultado);
+
+});
+
+
+// Contar libros por género
+app.get("/estadisticas/generos", (req, res) => {
+
+  let conteo = {};
+
+  libros.forEach(libro => {
+
+    if (conteo[libro.genero]) {
+      conteo[libro.genero]++;
+    } else {
+      conteo[libro.genero] = 1;
+    }
+
+  });
+
+  res.json(conteo);
+
+});
 // Arranque del servidor
 app.listen(PORT, () => {
   console.log(`Servidor de la Biblioteca arrancado correctamente`);
