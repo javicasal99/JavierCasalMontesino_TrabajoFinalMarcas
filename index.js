@@ -389,13 +389,7 @@ app.post("/resenas", (req, res) => {
   const puntuacion = req.body.puntuacion;
   const fecha = req.body.fecha;
 
-  if (
-    !libro_id ||
-    !usuario ||
-    !comentario ||
-    puntuacion === undefined ||
-    !fecha
-  ) {
+  if ( !libro_id || !usuario || !comentario || puntuacion === undefined || !fecha) {
     return res.status(400).json({
       mensaje: "Faltan campos obligatorios",
       campos_obligatorios: [
