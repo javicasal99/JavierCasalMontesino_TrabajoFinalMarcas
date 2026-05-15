@@ -86,15 +86,15 @@ Método, ruta, función
 
 - GET /reseñas	
 Mostrar todas las reseñas
-Ejemplo: GET http://localhost:3000/reseñas
+Ejemplo: GET http://localhost:3000/resenas
 
 - GET /libros/:id/reseñas
 	Mostrar reseñas de un libro
-    Ejemplo: GET http://localhost:3000/libros/1/reseñas
+    Ejemplo: GET http://localhost:3000/libros/1/resenas
 
 - POST /reseñas	
 Crear una reseña
-Ejemplo: POST http://localhost:3000/reseñas
+Ejemplo: POST http://localhost:3000/resenas
 Body:
 {
   "libro_id": 1,
@@ -104,9 +104,9 @@ Body:
   "fecha": "2026-01-01"
 }
 
-DELETE /reseñas/:id
+DELETE /resenas/:id
 	Eliminar una reseña
-    Ejemplo: DELETE http://localhost:3000/reseñas/1
+    Ejemplo: DELETE http://localhost:3000/resenas/1
 
 -- FILTROS Y BÚSQUEDAS --
 
@@ -144,7 +144,7 @@ Ejemplo: GET http://localhost:3000/libros/buscar?autor=Cervantes
 
 /reseñas/buscar?texto=
 	Buscar texto en comentarios
-    Ejemplo: GET http://localhost:3000/reseñas/buscar?texto=excelente
+    Ejemplo: GET http://localhost:3000/resenas/buscar?texto=excelente
 
 -- ESTADÍSTICAS --
 
