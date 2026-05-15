@@ -181,302 +181,367 @@ let resenas = [
   },
 ];
 
-//  Usa el valor 9 para ir autoincrementando
-let nextLibroId = 9;
-let nextResenaId = 9;
 
-
-// Endpoints Libros
-
+// GET / — devuelve libros y resenas si está vacío
+app.get("/", (req, res) => {
+  try {
+    res.json({
+      libros: libros,
+      resenas: resenas,
+    });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
+});
 
 // GET todos los libros
 app.get("/libros", (req, res) => {
-  res.json(libros);
+  try {
+    res.json(libros);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
 });
 
-// GET buscar libros con filtros
+// GET buscar libros con filtros (debe ir ANTES de /libros/:id)
 app.get("/libros/buscar", (req, res) => {
-  let resultado = libros;
-
-  if (req.query.titulo) {
-    resultado = resultado.filter((libro) =>
-      libro.titulo.includes(req.query.titulo),
-    );
-  }
-  if (req.query.autor) {
-    resultado = resultado.filter((libro) =>
-      libro.autor.toLowerCase().includes(req.query.autor.toLowerCase()),
-    );
-  }
-  if (req.query.genero) {
-    resultado = resultado.filter((libro) =>
-      libro.genero.toLowerCase().includes(req.query.genero.toLowerCase()),
-    );
-  }
-  if (req.query.disponible) {
-    if (req.query.disponible == "true") {
-      resultado = resultado.filter((libro) => libro.disponible == true);
+  try {
+    let resultado = libros;
+    if (req.query.titulo) {
+      resultado = resultado.filter((libro) =>
+        libro.titulo.includes(req.query.titulo),
+      );
     }
-    if (req.query.disponible == "false") {
-      resultado = resultado.filter((libro) => libro.disponible == false);
+    if (req.query.autor) {
+      resultado = resultado.filter((libro) =>
+        libro.autor.toLowerCase().includes(req.query.autor.toLowerCase()),
+      );
     }
-  }
-  if (req.query.ordenar_por) {
-    const campo = req.query.ordenar_por;
-    resultado.sort((a, b) => {
-      if (req.query.orden == "desc") {
-        if (a[campo] > b[campo]) return -1;
-        if (a[campo] < b[campo]) return 1;
-      } else {
-        if (a[campo] > b[campo]) return 1;
-        if (a[campo] < b[campo]) return -1;
+    if (req.query.genero) {
+      resultado = resultado.filter((libro) =>
+        libro.genero.toLowerCase().includes(req.query.genero.toLowerCase()),
+      );
+    }
+    if (req.query.disponible) {
+      if (req.query.disponible == "true") {
+        resultado = resultado.filter((libro) => libro.disponible == true);
       }
-      return 0;
-    });
+      if (req.query.disponible == "false") {
+        resultado = resultado.filter((libro) => libro.disponible == false);
+      }
+    }
+    if (req.query.ordenar_por) {
+      const campo = req.query.ordenar_por;
+      resultado.sort((a, b) => {
+        if (req.query.orden == "desc") {
+          if (a[campo] > b[campo]) return -1;
+          if (a[campo] < b[campo]) return 1;
+        } else {
+          if (a[campo] > b[campo]) return 1;
+          if (a[campo] < b[campo]) return -1;
+        }
+        return 0;
+      });
+    }
+    res.json(resultado);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-
-  res.json(resultado);
 });
 
 // GET libro por id
 app.get("/libros/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const libro = libros.find((libro) => libro.id == id);
-  if (!libro) {
-    res.status(404).json({ mensaje: "Libro no encontrado" });
-  } else {
-    res.json(libro);
+  try {
+    const id = parseInt(req.params.id);
+    const libro = libros.find((libro) => libro.id == id);
+    if (!libro) {
+      res.status(404).json({ mensaje: "Libro no encontrado" });
+    } else {
+      res.json(libro);
+    }
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 });
 
 // GET buscar libro por titulo
 app.get("/buscar-libro", (req, res) => {
-  const titulo = req.query.titulo;
-  const libro = libros.find(
-    (libro) => libro.titulo.toLowerCase() == titulo.toLowerCase(),
-  );
-  if (!libro) {
-    res.status(404).json({ mensaje: "Libro no encontrado" });
-  } else {
-    res.json(libro);
+  try {
+    const titulo = req.query.titulo;
+    const libro = libros.find(
+      (libro) => libro.titulo.toLowerCase() == titulo.toLowerCase(),
+    );
+    if (!libro) {
+      res.status(404).json({ mensaje: "Libro no encontrado" });
+    } else {
+      res.json(libro);
+    }
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 });
 
 // POST crear libro
 app.post("/libros", (req, res) => {
-  const {
-    titulo,
-    autor,
-    genero,
-    anio,
-    paginas,
-    disponible,
-    valoracion,
-    editorial,
-    sinopsis,
-  } = req.body;
-  if (
-    !titulo ||
-    !autor ||
-    !genero ||
-    !anio ||
-    !paginas ||
-    !editorial ||
-    !sinopsis
-  ) {
-    return res.status(400).json({
-      mensaje: "Faltan campos obligatorios",
-      campos_obligatorios: [
-        "titulo",
-        "autor",
-        "genero",
-        "anio",
-        "paginas",
-        "editorial",
-        "sinopsis",
-      ],
-    });
+  try {
+    const {
+      titulo,
+      autor,
+      genero,
+      anio,
+      paginas,
+      disponible,
+      valoracion,
+      editorial,
+      sinopsis,
+    } = req.body;
+    if (
+      !titulo ||
+      !autor ||
+      !genero ||
+      !anio ||
+      !paginas ||
+      !editorial ||
+      !sinopsis
+    ) {
+      return res.status(400).json({
+        mensaje: "Faltan campos obligatorios",
+        campos_obligatorios: [
+          "titulo",
+          "autor",
+          "genero",
+          "anio",
+          "paginas",
+          "editorial",
+          "sinopsis",
+        ],
+      });
+    }
+    const nuevoLibro = {
+      id: libros.length + 1,
+      titulo,
+      autor,
+      genero,
+      anio,
+      paginas,
+      disponible,
+      valoracion,
+      editorial,
+      sinopsis,
+    };
+    libros.push(nuevoLibro);
+    res.status(201).json({ mensaje: "Libro añadido", libro: nuevoLibro });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-  const nuevoLibro = {
-    id: nextLibroId++,
-    titulo,
-    autor,
-    genero,
-    anio,
-    paginas,
-    disponible,
-    valoracion,
-    editorial,
-    sinopsis,
-  };
-  libros.push(nuevoLibro);
-  res.status(201).json({ mensaje: "Libro añadido", libro: nuevoLibro });
 });
 
 // PUT modificar libro
 app.put("/libros/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const libro = libros.find((libro) => libro.id == id);
-  if (!libro) {
-    res.status(404).json({ mensaje: "Libro no encontrado" });
-  } else {
-    libro.titulo = req.body.titulo;
-    libro.autor = req.body.autor;
-    libro.genero = req.body.genero;
-    libro.anio = req.body.anio;
-    libro.paginas = req.body.paginas;
-    libro.disponible = req.body.disponible;
-    libro.valoracion = req.body.valoracion;
-    libro.editorial = req.body.editorial;
-    libro.sinopsis = req.body.sinopsis;
-    res.json({ mensaje: "Libro actualizado", libro: libro });
+  try {
+    const id = parseInt(req.params.id);
+    const libro = libros.find((libro) => libro.id == id);
+    if (!libro) {
+      res.status(404).json({ mensaje: "Libro no encontrado" });
+    } else {
+      libro.titulo = req.body.titulo;
+      libro.autor = req.body.autor;
+      libro.genero = req.body.genero;
+      libro.anio = req.body.anio;
+      libro.paginas = req.body.paginas;
+      libro.disponible = req.body.disponible;
+      libro.valoracion = req.body.valoracion;
+      libro.editorial = req.body.editorial;
+      libro.sinopsis = req.body.sinopsis;
+      res.json({ mensaje: "Libro actualizado", libro: libro });
+    }
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 });
 
 // DELETE eliminar libro
 app.delete("/libros/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const indice = libros.findIndex((libro) => libro.id == id);
-  if (indice == -1) {
-    res.status(404).json({ mensaje: "Libro no encontrado" });
-  } else {
-    libros.splice(indice, 1);
-    res.json({ mensaje: "Libro eliminado" });
+  try {
+    const id = parseInt(req.params.id);
+    const indice = libros.findIndex((libro) => libro.id == id);
+    if (indice == -1) {
+      res.status(404).json({ mensaje: "Libro no encontrado" });
+    } else {
+      libros.splice(indice, 1);
+      res.json({ mensaje: "Libro eliminado" });
+    }
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 });
 
-
-// Endpoints resenas
 
 
 // GET todas las resenas
 app.get("/resenas", (req, res) => {
-  res.json(resenas);
+  try {
+    res.json(resenas);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
 });
 
 // GET resenas de un libro concreto
 app.get("/libros/:id/resenas", (req, res) => {
-  const id = parseInt(req.params.id);
-  const libro = libros.find((l) => l.id == id);
-  if (!libro) {
-    return res.status(404).json({ mensaje: "Libro no encontrado" });
+  try {
+    const id = parseInt(req.params.id);
+    const libro = libros.find((l) => l.id == id);
+    if (!libro) {
+      return res.status(404).json({ mensaje: "Libro no encontrado" });
+    }
+    const resenasLibro = resenas.filter((r) => r.libro_id == id);
+    res.json(resenasLibro);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-  const resenasLibro = resenas.filter((r) => r.libro_id == id);
-  res.json(resenasLibro);
 });
 
 // GET buscar resenas por texto (debe ir ANTES de /resenas/:id)
 app.get("/resenas/buscar", (req, res) => {
-  const { texto } = req.query;
-  if (!texto) {
-    return res
-      .status(400)
-      .json({ mensaje: "Debes indicar el parámetro texto" });
+  try {
+    const { texto } = req.query;
+    if (!texto) {
+      return res
+        .status(400)
+        .json({ mensaje: "Debes indicar el parámetro texto" });
+    }
+    const resultado = resenas.filter(
+      (r) =>
+        r.comentario.toLowerCase().includes(texto.toLowerCase()) ||
+        r.usuario.toLowerCase().includes(texto.toLowerCase()),
+    );
+    res.json(resultado);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-  const resultado = resenas.filter(
-    (r) =>
-      r.comentario.toLowerCase().includes(texto.toLowerCase()) ||
-      r.usuario.toLowerCase().includes(texto.toLowerCase()),
-  );
-  res.json(resultado);
 });
 
 // POST crear resena
 app.post("/resenas", (req, res) => {
-  const libro_id = req.body.libro_id;
-  const usuario = req.body.usuario;
-  const comentario = req.body.comentario;
-  const puntuacion = req.body.puntuacion;
-  const fecha = req.body.fecha;
-
-  if ( !libro_id || !usuario || !comentario || puntuacion === undefined || !fecha) {
-    return res.status(400).json({
-      mensaje: "Faltan campos obligatorios",
-      campos_obligatorios: [
-        "libro_id",
-        "usuario",
-        "comentario",
-        "puntuacion",
-        "fecha",
-      ],
-    });
+  try {
+    const libro_id = req.body.libro_id;
+    const usuario = req.body.usuario;
+    const comentario = req.body.comentario;
+    const puntuacion = req.body.puntuacion;
+    const fecha = req.body.fecha;
+    if (
+      !libro_id ||
+      !usuario ||
+      !comentario ||
+      puntuacion === undefined ||
+      !fecha
+    ) {
+      return res.status(400).json({
+        mensaje: "Faltan campos obligatorios",
+        campos_obligatorios: [
+          "libro_id",
+          "usuario",
+          "comentario",
+          "puntuacion",
+          "fecha",
+        ],
+      });
+    }
+    const libro = libros.find((l) => l.id == libro_id);
+    if (!libro) {
+      return res.status(404).json({ mensaje: "El libro indicado no existe" });
+    }
+    const nuevaResena = {
+      id: resenas.length + 1,
+      libro_id,
+      usuario,
+      comentario,
+      puntuacion,
+      fecha,
+    };
+    resenas.push(nuevaResena);
+    res.status(201).json({ mensaje: "Resena añadida", resena: nuevaResena });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-  const libro = libros.find((l) => l.id == libro_id);
-  if (!libro) {
-    return res.status(404).json({ mensaje: "El libro indicado no existe" });
-  }
-  const nuevaResena = {
-    id: nextResenaId++,
-    libro_id,
-    usuario,
-    comentario,
-    puntuacion,
-    fecha,
-  };
-  resenas.push(nuevaResena);
-  res.status(201).json({ mensaje: "Resena añadida", resena: nuevaResena });
 });
 
 // DELETE eliminar resena
 app.delete("/resenas/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const indice = resenas.findIndex((r) => r.id == id);
-  if (indice == -1) {
-    return res.status(404).json({ mensaje: "Resena no encontrada" });
+  try {
+    const id = parseInt(req.params.id);
+    const indice = resenas.findIndex((r) => r.id == id);
+    if (indice == -1) {
+      return res.status(404).json({ mensaje: "Resena no encontrada" });
+    }
+    resenas.splice(indice, 1);
+    res.json({ mensaje: "Resena eliminada" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-  resenas.splice(indice, 1);
-  res.json({ mensaje: "Resena eliminada" });
 });
-
 
 
 // Estadísticas generales
 app.get("/estadisticas/libros", (req, res) => {
-  let suma = 0;
-  libros.forEach((libro) => {
-    suma = suma + libro.valoracion;
-  });
-  let media = suma / libros.length;
-  let disponibles = libros.filter((libro) => libro.disponible == true).length;
-  let noDisponibles = libros.filter(
-    (libro) => libro.disponible == false,
-  ).length;
-  res.json({
-    total_libros: libros.length,
-    total_resenas: resenas.length,
-    disponibles: disponibles,
-    no_disponibles: noDisponibles,
-    valoracion_media: media,
-  });
+  try {
+    let suma = 0;
+    libros.forEach((libro) => {
+      suma = suma + libro.valoracion;
+    });
+    let media = suma / libros.length;
+    let disponibles = libros.filter((libro) => libro.disponible == true).length;
+    let noDisponibles = libros.filter(
+      (libro) => libro.disponible == false,
+    ).length;
+    res.json({
+      total_libros: libros.length,
+      total_resenas: resenas.length,
+      disponibles: disponibles,
+      no_disponibles: noDisponibles,
+      valoracion_media: media,
+    });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
 });
 
 // Top libros
 app.get("/estadisticas/top", (req, res) => {
-  let n = 3;
-  if (req.query.n) {
-    n = parseInt(req.query.n);
+  try {
+    let n = 3;
+    if (req.query.n) {
+      n = parseInt(req.query.n);
+    }
+    let resultado = [...libros];
+    resultado.sort((a, b) => {
+      if (a.valoracion > b.valoracion) return -1;
+      if (a.valoracion < b.valoracion) return 1;
+      return 0;
+    });
+    resultado = resultado.slice(0, n);
+    res.json(resultado);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
-  let resultado = [...libros];
-  resultado.sort((a, b) => {
-    if (a.valoracion > b.valoracion) return -1;
-    if (a.valoracion < b.valoracion) return 1;
-    return 0;
-  });
-  resultado = resultado.slice(0, n);
-  res.json(resultado);
 });
 
 // Contar libros por género
 app.get("/estadisticas/generos", (req, res) => {
-  let conteo = {};
-  libros.forEach((libro) => {
-    if (conteo[libro.genero]) {
-      conteo[libro.genero]++;
-    } else {
-      conteo[libro.genero] = 1;
-    }
-  });
-  res.json(conteo);
+  try {
+    let conteo = {};
+    libros.forEach((libro) => {
+      if (conteo[libro.genero]) {
+        conteo[libro.genero]++;
+      } else {
+        conteo[libro.genero] = 1;
+      }
+    });
+    res.json(conteo);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
 });
 
 // Arranque del servidor
